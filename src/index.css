@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* For smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 1. DEFINE THEME-AWARE CSS VARIABLES */
+/* :root defines the DEFAULT (light) theme */
+:root {
+  --bg-main: #ffffff;
+  --bg-main-transparent: rgba(255, 255, 255, 0.8);
+  --bg-accent: #f0f2f5;
+  --text-main: #111827;
+}
+
+/* html.dark defines the TOGGLED (dark) theme */
+html.dark {
+  --bg-main: #000000;
+  --bg-main-transparent: rgba(0, 0, 0, 0.8);
+  --bg-accent: #1a2a45;
+  --text-main: #ccd6f6;
+}
+
+
+/* 2. DEFINE THE ROTATION ANIMATION */
+@keyframes rotate-border-gradient {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* 3. DEFINE THE NAVBAR LINK STYLES */
+.nav-link-hover {
+  position: relative; /* Container for pseudo-elements */
+  display: inline-block;
+  overflow: hidden; /* Clips the spinning gradient */
+  border-radius: 6px;
+}
+
+/* The spinning gradient background */
+.nav-link-hover::before {
+  content: '';
+  position: absolute;
+  top: -150%;
+  left: -150%;
+  width: 300%; 
+  height: 300%;
+  z-index: -2; /* Places it behind everything */
+  
+  background: conic-gradient(
+    from 0deg,
+    var(--bg-accent),
+    #3b82f6,
+    #64ffda,
+    var(--bg-accent)
+  );
+  
+  animation: rotate-border-gradient 4s linear infinite;
+  animation-play-state: paused;
+  
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+/* The solid background that masks the gradient to create the border */
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  inset: 2px; /* Controls border thickness */
+  border-radius: 4px; /* Slightly smaller rounding for the inside */
+  background-color: var(--bg-main); /* Uses theme-aware background color */
+  z-index: -1; /* Places it on top of the gradient, but behind the text */
+}
+
+/* On hover, reveal and play the animation */
+.nav-link-hover:hover::before {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+
+/* --- Project Card Gradient Underline Effect --- */
+.card-gradient-underline {
+  position: relative; /* Required for the ::after pseudo-element */
+}
+
+/* This creates the gradient line at the bottom of the card */
+.card-gradient-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px; /* This is the thickness of the underline */
+  width: 0;    /* It starts with no width */
+  
+  background: linear-gradient(90deg, #64ffda, #3b82f6); /* The gradient */
+  
+  /* Animate the width change */
+  transition: width 0.4s ease-out; 
+}
+
+/* On hover, the line expands to the full width of the card */
+.card-gradient-underline:hover::after {
+  width: 100%;
+}
